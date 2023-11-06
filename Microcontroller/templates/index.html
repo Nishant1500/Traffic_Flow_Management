@@ -309,7 +309,7 @@
           });
 
           socket.on("inference", (data) => {
-            document.getElementById("inference_img").innerHTML = `<img src="data:image/png;base64,${data.img}" class="h-80">`
+            document.getElementById("inference_img").innerHTML = `<img src="data:image/png;base64,${data.img}" style="height:28rem">`
           });
 
           socket.on("disconnect", () => {

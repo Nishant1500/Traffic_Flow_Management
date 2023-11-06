@@ -5,15 +5,18 @@ import json
 import time
 import math
 from flask import Flask, render_template
-from eventlet import websocket
+import socket
 from threading import Thread
 
 admins=[]
 connected = []
-@websocket.WebSocketWSGI
-def web_hello(ws):
-    connected.append(ws)
+
+def web_hello(env, start_response):
+    # connected.append(ws)
     print(f"[WS] Client connected")
+    start_response('200 OK', [('Content-Type', 'text/json')])
+    return "Test 1"
+    """
     try:
         while True:
             from_browser = ws.wait()
@@ -32,6 +35,7 @@ def web_hello(ws):
     finally:
         print(f"[WS] Client disconnected")
         return connected.remove(ws)
+    """
 
 app = Flask(__name__, static_folder='static')
 
@@ -41,7 +45,8 @@ sio = socketio.Server(cors_allowed_origins=[
     "https://admin.socket.io",
     "http://localhost:3000",
     "https://4aa4-2409-40e2-1c-b3bf-4dd3-2abc-1664-c5da.ngrok-free.app",
-    "http://192.168.88.107:3000"
+    "http://192.168.88.107:3000",
+    "http://192.168.43.245:3000"
     ],
     async_mode='threading'
                       )
@@ -112,6 +117,13 @@ def updateTime():
     global timer, t1, current_zone;
     print("[Socket.IO] Timer:", timer)
     timer-=1
+    if(timer-2<=5 and timer-2>-1):
+         update_lights("", {
+            "zone": (1 if current_zone==3 else (current_zone+1)%4),
+            "color": "yellow",
+            "auto": True,
+            "time": timer
+        })
 
 def setTime(data):
     global current_zone, inferece_data, timer;
@@ -129,6 +141,7 @@ def setTime(data):
     elif(timer<5): timer=5
     elif(timer>60): timer=60;
     if(timer!=0):
+         timer+=2
          update_lights("", {
             "zone": current_zone,
             "color": "green",
@@ -161,15 +174,12 @@ def update_lights(sid, data):
         print("[Debug WS] ", zone, color)
         new_data = {
              "z": zone,
-             "c": 1 if color=="red" else (2 if color=="yellow" else 3)
-        }
-        connected[0].send(json.dumps(new_data))
-        new_data = {
-             "z": zone,
              "c": 1 if color=="red" else (2 if color=="yellow" else 3),
              "u": True if ("auto" in data.keys()) else False,
              "t": data['time'] if ("time" in data.keys()) else False
         }
+        for ws in connected:
+            ws.send(f"{json.dumps(new_data)}".encode())
         sio.emit("update_lights/broadcast", new_data)
     return;
 
@@ -182,7 +192,26 @@ def index():
                 all_sockets.append(sid)
     return render_template("index.html", connected=all_sockets, admins=len(admins))
 
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind(("0.0.0.0", 4000))
+server.listen(5)  # max backlog of connections
+
+print('Listening on {}:{}'.format("0.0.0.0", 4000))
+
+
+def handle_client_connection(client_socket):
+     print("hi")
+
 if __name__ == '__main__':
-    t= Thread(name="WS_server", target=websocket.wsgi.server, args=(eventlet.listen(('', 4000)), web_hello,))
+    t= Thread(name="WS_server", target=app.run, args=('0.0.0.0', 3000,))
     t.start()
-    app.run("0.0.0.0", 3000)
+
+    while True:
+        client_sock, address = server.accept()
+        connected.append(client_sock);
+        print('Accepted connection from {}:{}'.format(address[0], address[1]))
+        client_handler = Thread(
+            target=handle_client_connection,
+            args=(client_sock,)  # without comma you'd get a... TypeError: handle_client_connection() argument after * must be a sequence, not _socketobject
+        )
+        client_handler.start()
