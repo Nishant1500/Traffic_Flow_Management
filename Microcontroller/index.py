@@ -121,7 +121,6 @@ def updateTime():
          update_lights("", {
             "zone": (1 if current_zone==3 else (current_zone+1)%4),
             "color": "yellow",
-            "auto": True,
             "time": timer
         })
 

@@ -1,18 +1,17 @@
 from machine import Pin
-from dotenv import dotenv_values as env
-import time
+import utime as time
 import usocket as socket
 import tm1637
 import network
 import ujson as json
 import _thread
 
-ENV = env("config.env")
+# ENV = env("config.env")
 
 led = Pin(5, Pin.OUT)
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
-wlan.connect(ENV["SSID"], ENV["PASS"])
+wlan.connect("SSID", "PASS")
 display = tm1637.TM1637(clk=Pin(16), dio=Pin(17))
 
 # Wait for connect or fail
@@ -39,7 +38,7 @@ else:
 print(wlan.ifconfig())
 
 s= socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.connect(("192.168.88.107", 4000))
+s.connect(("SOCKET_IP", 4000))
 
 led_config = [
     [[5,4,3],[1,0,0],[0,1,0],[0,0,1]],
@@ -89,6 +88,7 @@ while True:
     if(timer > -1):
         display.number(timer)
         timer-=1
+        if(timer==0): zerDisplayed=True;
         time.sleep(1)
     else:
         if(not zerDisplayed):
