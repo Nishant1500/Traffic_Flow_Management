@@ -44,8 +44,10 @@ sio = socketio.Server(cors_allowed_origins=[
     "https://amritb.github.io",
     "https://admin.socket.io",
     "http://localhost:3000",
-    "https://4aa4-2409-40e2-1c-b3bf-4dd3-2abc-1664-c5da.ngrok-free.app",
+    "https://b369-2409-40e2-6-27d7-e48c-d37d-328-a4ab.ngrok-free.app",
     "http://192.168.88.107:3000",
+    "https://7c49-2409-40e2-1e-afeb-dca0-3453-6065-9584.ngrok-free.app",
+    "http://192.168.110.107:3000",
     "http://192.168.43.245:3000"
     ],
     async_mode='threading'
