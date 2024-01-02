@@ -1,6 +1,7 @@
 import sys
 import socketio
-import eventlet
+import os
+import sys
 import json
 import time
 import math
@@ -48,7 +49,8 @@ sio = socketio.Server(cors_allowed_origins=[
     "http://192.168.88.107:3000",
     "https://7c49-2409-40e2-1e-afeb-dca0-3453-6065-9584.ngrok-free.app",
     "http://192.168.110.107:3000",
-    "http://192.168.43.245:3000"
+    "http://192.168.43.245:3000",
+    "http://192.168.29.3:3000"
     ],
     async_mode='threading'
                       )
@@ -114,21 +116,35 @@ timer=-1
 t1=None
 t2=None
 inference_data=None
+next_lane=1
 
 def updateTime():
-    global timer, t1, current_zone;
+    global timer, t1, current_zone, next_lane;
     print("[Socket.IO] Timer:", timer)
     timer-=1
-    if(timer-2<=5 and timer-2>-1):
+    next_lane=1 if current_zone==3 else (current_zone+1)%4;
+    amb= (inference_data['ambulance_zones'] + inference_data['firetruck_zones'] + inference_data['police_zones'])
+    print("[Debug] Ambulance Zones", amb)
+    if(len(amb) >0):
+        global temp
+        temp=[]
+        for zone in amb:
+            if(inference_data[f"zone_{zone}"] !=0): temp.append(inference_data[f"zone_{zone}"])
+        next_lane = int(list(inference_data.keys())[list(inference_data.values()).index(min(temp))][-1]);
+    print("[Debug] Next Lane" + str(next_lane))
+    while (inference_data[f'zone_{next_lane}']==0):
+        next_lane=1 if next_lane==3 else (next_lane+1)%4;
+    if(timer-2<=5 and timer-2>-1 and next_lane!=current_zone):
          update_lights("", {
-            "zone": (1 if current_zone==3 else (current_zone+1)%4),
+            "zone": (next_lane),
             "color": "yellow",
             "time": timer
         })
 
 def setTime(data):
-    global current_zone, inferece_data, timer;
-    amb= data['ambulance_zones']
+    global current_zone, inference_data, timer;
+    inference_data = data;
+    amb= (data['ambulance_zones'] + data['firetruck_zones'] + data['police_zones'])
     if(len(amb) >0):
         global temp
         temp=[]
@@ -137,10 +153,10 @@ def setTime(data):
         current_zone = int(list(data.keys())[list(data.values()).index(min(temp))][-1]);
         print("[Debug] Current Zone" + str(current_zone))
               
-    timer = math.ceil(((5*data["zone_" + str(current_zone)]))/3)
+    timer = math.ceil(((10*data["zone_" + str(current_zone)]))/3)
     if(timer==0): timer=0
-    elif(timer<5): timer=5
-    elif(timer>60): timer=60;
+    elif(timer<10): timer=10
+    elif(timer>60): timer=90;
     if(timer!=0):
          timer+=2
          update_lights("", {
@@ -159,12 +175,22 @@ def setTime(data):
 def inference(sid, data):
     global thread, inference_data;
     inference_data=data
+
     if(timer<0): 
         thread = Thread(name="detection",target=setTime, args=(inference_data,))
         thread.daemon = True
         thread.start()
     print("[Socket.IO] Inference:", timer)
     return sio.emit('inference', data=data, to=admins[0])
+
+class CodeRestartManual(Exception):
+    pass
+
+@sio.on('restart_manual') # type: ignore
+def restart_manually(sid, data):
+    os.system(f"pkill -f {sys.argv[0]}")
+    sys.exit(0)
+    raise CodeRestartManual("Restarting the program")
 
 @sio.on('update_lights/update') # type: ignore
 def update_lights(sid, data):

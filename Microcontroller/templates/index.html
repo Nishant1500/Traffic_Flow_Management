@@ -5,12 +5,14 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="icon" href="./static/favicon.png" >
         <link href="./static/flowbite.min.css" rel="stylesheet" />
-        <script src="./static/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
-        <script src="./static/flowbite.min.js"></script>
-        <script src="./static/jquery.min.js"></script>
-        <script src="./static/jquery-ui.min.js"></script>
-        <script src="./static/sevenSeg.js"></script>
+        <script src="./static/socket.io.min.js"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
         <style>
+          @layer components {
+            .next_sibling:has(input:checked) + .next_sibling:not(:has(input:checked)) {
+            }
+          }
+
           .trafficLight {
             background-color: #333;
             width: 50px;
@@ -138,12 +140,13 @@
                   </div>
               </div>
 
-                <div class="flex justify-between mt-5">
-                  <div id="inference_img" class="flex items-center justify-center h-80 bg-gray-300 rounded sm:w-96 dark:bg-gray-700" style="width: 60%;">
-                    <svg class="w-10 h-10 text-gray-200 dark:text-gray-600" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-                        <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z"/>
-                    </svg>
-                  </div>
+              <div class="grid grid-rows-5 800px]:grid-rows-3 min-[800px]:grid-cols-4 auto-cols-max gap-4 min-[409px]:auto-cols-auto">
+                <div id="inference_img" class="sm:col-span-2 items-center justify-center max-w-screen-sm bg-gray-300 rounded dark:bg-gray-700" style="width: 100%; height:100%; object-fit:contain;">
+                  <svg class="w-10 h-10 text-gray-200 dark:text-gray-600 m-14" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
+                      <path d="M18 0H2a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2Zm-5.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm4.376 10.481A1 1 0 0 1 16 15H4a1 1 0 0 1-.895-1.447l3.5-7A1 1 0 0 1 7.468 6a.965.965 0 0 1 .9.5l2.775 4.757 1.546-1.887a1 1 0 0 1 1.618.1l2.541 4a1 1 0 0 1 .028 1.011Z"/>
+                  </svg>
+                </div>
+                <section class="sm:col-span-2 justify-between lg:*:mx-4 flex flex-row flex-wrap">
                   <div id="zone_1" class="flex flex-col items-center">
                     <span class="font-black">Zone 1</span>
                     <div class="trafficLight mb-2">
@@ -156,7 +159,6 @@
                     <button onclick="yellow(1)" type="button" class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900">Stanby</button>
                     <button onclick="green(1)" type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Go</button>
                   </div>
-
                   <div id="zone_2" class="flex flex-col items-center">
                     <span class="font-black">Zone 2</span>
                     <div class="trafficLight mb-2">
@@ -169,7 +171,6 @@
                     <button onclick="yellow(2)" type="button" class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900">Stanby</button>
                     <button onclick="green(2)" type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Go</button>
                   </div>
-
                   <div id="zone_3" class="flex flex-col items-center">
                     <span class="font-black">Zone 3</span>
                     <div class="trafficLight mb-2">
@@ -182,7 +183,74 @@
                     <button onclick="yellow(3)" type="button" class="focus:outline-none text-white bg-yellow-400 hover:bg-yellow-500 focus:ring-4 focus:ring-yellow-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:focus:ring-yellow-900">Stanby</button>
                     <button onclick="green(3)" type="button" class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">Go</button>
                   </div>
-                </div>
+                </section>
+                
+                  <div class="overflow-hidden rounded-xl border border-gray-200">
+                    <div class="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-100 p-6">
+                      <img src="./static/police-icon512.png" alt="Tuple" class="h-12 w-12 flex-none rounded-lg bg-white object-cover ring-1 ring-gray-900/10">
+                      <div class="text-sm font-medium leading-6 text-gray-900">Police</div>                
+                    </div>
+                    <dl class="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm leading-6">
+                      <div class="flex justify-between gap-x-4 py-3">
+                        <dt class="text-gray-500">Current Dispatch Timestamp</dt>
+                        <dd class="text-gray-700" id="po-time"><time>No Data</time></dd>
+                      </div>
+                      <div class="flex justify-between gap-x-4 py-3">
+                        <dt class="text-gray-500">Amount</dt>
+                        <dd class="max-[870px]:flex-col flex items-start gap-x-2">
+                          <div class="font-medium text-gray-900">$2,000.00</div>
+                          <div class="rounded-md py-1 px-2 text-xs font-medium ring-1 ring-inset text-red-700 bg-red-50 ring-red-600/10">Overdue</div>
+                        </dd>
+                      </div>
+                      <ul id="polList" class="mt-2 max-w-md divide-y divide-gray-200 dark:divide-gray-700">
+                      </ul>
+                    </dl>
+                  </div>
+                  <div class="overflow-hidden rounded-xl border border-gray-200">
+                    <div class="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-100 p-6">
+                      <img src="./static/ambulance-icon512.png" alt="SavvyCal" class="scale-x-[-1] h-12 w-12 flex-none rounded-lg bg-white object-cover ring-1 ring-gray-900/10">
+                      <div class="text-sm font-medium leading-6 text-gray-900">Ambulance</div>
+                    </div>
+                    <dl class="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm leading-6">
+                      <div class="flex justify-between gap-x-4 py-3">
+                        <dt class="text-gray-500">Current Dispatch Timestamp</dt>
+                        <dd class="text-gray-700" id="am-time"><time>No Data</time></dd>
+                      </div>
+                      <div class="flex justify-between gap-x-4 py-3">
+                        <dt class="text-gray-500">Amount</dt>
+                        <dd class="max-[870px]:flex-col flex items-start gap-x-2">
+                          <div class="font-medium text-gray-900">$14,000.00</div>
+                          <div class="rounded-md py-1 px-2 text-xs font-medium ring-1 ring-inset text-green-700 bg-green-50 ring-green-600/20">Paid</div>
+                        </dd>
+                      </div>
+                      <ul id="ambList" class="mt-2 max-w-md divide-y divide-gray-200 dark:divide-gray-700">
+                      </ul>
+                    </dl>
+                  </div>
+                  <div class="overflow-hidden rounded-xl border border-gray-200">
+                    <div class="flex items-center gap-x-4 border-b border-gray-900/5 bg-gray-100 p-6">
+                      <img src="./static/firetruck-icon512.png" alt="Reform" class="h-12 w-12 flex-none rounded-lg bg-white object-cover ring-1 ring-gray-900/10">
+                      <div class="text-sm font-medium leading-6 text-gray-900">Firetruck</div>                      
+                    </div>
+                    <dl class="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm leading-6">
+                      <div class="flex justify-between gap-x-4 py-3">
+                        <dt class="text-gray-500">Current Dispatch Timestamp</dt>
+                        <dd class="text-gray-700" id="fi-time"><time>No Data</time></dd>
+                      </div>
+                      <div class="flex justify-between gap-x-4 py-3">
+                        <dt class="text-gray-500">Amount</dt>
+                        <dd class="max-[870px]:flex-col flex items-start gap-x-2">
+                          <div class="font-medium text-gray-900">$7,600.00</div>
+                          <div class="rounded-md py-1 px-2 text-xs font-medium ring-1 ring-inset text-green-700 bg-green-50 ring-green-600/20">Paid</div>
+                        </dd>
+                      </div>
+                      <ul id="firList" class="mt-2 max-w-md divide-y divide-gray-200 dark:divide-gray-700">
+                      </ul>
+                    </dl>
+                  </li>
+                </ul>                
+  
+              </div>
 
                 <div class="rounded">
                   <div id="display7" class="h-12" style="width: 10rem;"></div>
@@ -205,6 +273,23 @@
 
         <script>
           const socket = io();
+
+          function togglePriority(type, id, prio) {
+            type==1?type="p":type==2?type="a":type="f"
+            if(prio == 1) {
+              document.getElementById(type+'lowCheck'+id).checked=true;
+              document.getElementById(type+'neutralCheck'+id).checked=false;
+              document.getElementById(type+'highCheck'+id).checked=false;
+            } else if(prio == 2) {
+              document.getElementById(type+'neutralCheck'+id).checked=true;
+              document.getElementById(type+'lowCheck'+id).checked=false;
+              document.getElementById(type+'highCheck'+id).checked=false;
+            } else if(prio == 3) {
+              document.getElementById(type+'highCheck'+id).checked=true;
+              document.getElementById(type+'lowCheck'+id).checked=false;
+              document.getElementById(type+'neutralCheck'+id).checked=false;
+            }
+          }
 
           socket.on("connect", () => {
             console.log(socket.id); // x8WIv7-mJelg7on_ALbx
@@ -254,6 +339,54 @@
 </div>`
             }
           })
+
+          zonesColor={}
+
+          function componentToHex(c) {
+  var hex = c.toString(16);
+  return hex.length == 1 ? "0" + hex : hex;
+}
+
+function rgbToHex(r, g, b) {
+  return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+      function getRandomVibrantColor(zid) {
+        if(zonesColor[`${zid}`]) return zonesColor[`${zid}`]
+          const saturation = 100; // Set the saturation value for vibrant colors
+          const lightness = 50; // Set the lightness value for vibrant colors
+
+          const hue = Math.floor(Math.random() * 360); // Generate a random hue valu
+          // Convert HSL color to RGB color
+          const hslToRgb = (h, s, l) => {
+            h /= 360;
+            s /= 100;
+            l /= 100;
+            let r, g, b;
+            if (s === 0) {
+              r = g = b = l; // achromatic
+            } else {
+              const hueToRgb = (p, q, t) => {
+                if (t < 0) t += 1;
+                if (t > 1) t -= 1;
+                if (t < 1 / 6) return p + (q - p) * 6 * t;
+                if (t < 1 / 2) return q;
+                if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+                return p;
+              };
+
+              const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+              const p = 2 * l - q;
+              r = hueToRgb(p, q, h + 1 / 3);
+              g = hueToRgb(p, q, h);
+              b = hueToRgb(p, q, h - 1 / 3);
+            }
+            return rgbToHex(Math.round(r * 255), Math.round(g * 255), Math.round(b * 255));
+          };
+        if(!zonesColor[`${zid}`]) zonesColor[`${zid}`]= hslToRgb(hue, saturation, lightness);
+
+        return zonesColor[`${zid}`]
+      }
 
           function red(id) {
             document.getElementById('red'+id).classList.add("open");
@@ -310,6 +443,184 @@
 
           socket.on("inference", (data) => {
             document.getElementById("inference_img").innerHTML = `<img src="data:image/png;base64,${data.img}" style="height:28rem">`
+            update = new Date()
+            document.getElementById("polList").innerHTML = ""
+            for(var z of data.police_zones) {
+              document.getElementById("po-time").innerText = `${update.getHours()}:${update.getMinutes()} ${update.getHours() >= 12 ? 'PM' : 'AM'}`
+              document.getElementById("polList").innerHTML += `<li class="pb-3 sm:pb-4">
+                           <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                              <div class="rounded bg-[${getRandomVibrantColor(z)}] flex-shrink-0">
+                                 <div class="m-2">#${z}</div>
+                              </div>
+                              <div class="flex-1 min-w-0">
+                                 <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                    Police Car
+                                 </p>
+                                 <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                                    Zone ${z}
+                                 </p>
+                              </div>
+                              <button id="poldropdownButton${z}" data-dropdown-toggle="dropdown" class="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5" type="button">
+                                <span class="sr-only">Open dropdown</span>
+                                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                                    <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
+                                </svg>
+                            </button>
+                            <!-- Dropdown menu -->
+                            <div id="poldropdown${z}" class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                <ul class="py-2" aria-labelledby="dropdownButton">
+                                  <li class=" mx-4 grid grid-cols-3 gap-2 grid-row-2">
+                                    <span class="text-black col-span-3">Priority Management</span>
+    
+                                    <button type="button" onclick="togglePriority(1,${z},1)" class="next_sibling text-red-700 border border-red-700 [&:has(input:checked)]:bg-red-700 [&:has(input:checked)]:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-red-500 dark:text-red-500 dark:focus:ring-red-800">
+                                      <input type="checkbox" class="hidden peer" id="plowCheck${z}"/>
+                                      <img src="./static/decrease-prio.png"/>
+                                      <span class="sr-only">Lowest Priority</span>
+                                    </button>
+    
+                                    <button type="button" onclick="togglePriority(1,${z},2)" class="next_sibling text-gray-700 border border-gray-700 [&:has(input:checked)]:text-white [&:has(input:checked)]:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-gray-500 dark:text-gray-500 dark:focus:ring-gray-800">
+                                      <input type="checkbox" class="hidden peer" id="pneutralCheck${z}" checked/>
+                                      <img src="./static/neutral-prio.png"/>
+                                      <span class="sr-only">Neutral Priority</span>
+                                    </button>
+    
+                                    <button type="button" onclick="togglePriority(1,${z},3)" class="next_sibling text-green-700 border border-green-700 [&:has(input:checked)]:bg-green-700 [&:has(input:checked)]:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-green-500 dark:text-green-500 dark:focus:ring-green-800">
+                                      <input type="checkbox" class="hidden peer" id="phighCheck${z}"/>
+                                      <img src="./static/increase-prio.png"/>
+                                      <span class="sr-only">Highest Priority</span>
+                                    </button>
+                                    <a href="#" class="row-span-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Edit</a>
+                                  </li>
+                                  <li>
+                                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Export Data</a>
+                                  </li>
+                                  <li>
+                                      <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
+                                  </li>`
+            }
+
+            for(var z1 of data.police_zones) {
+              new Dropdown(document.getElementById(`poldropdown${z1}`), document.getElementById(`poldropdownButton${z1}`))
+            }
+
+            document.getElementById("ambList").innerHTML = ""
+            for(var a of data.ambulance_zones) {
+              document.getElementById("am-time").innerText = `${update.getHours()}:${update.getMinutes()} ${update.getHours() >= 12 ? 'PM' : 'AM'}`
+              document.getElementById("ambList").innerHTML += `<li class="pb-3 sm:pb-4">
+                           <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                              <div class="rounded bg-[${getRandomVibrantColor(a)}] flex-shrink-0">
+                                 <div class="m-2">#${a}</div>
+                              </div>
+                              <div class="flex-1 min-w-0">
+                                 <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                    Ambulance
+                                 </p>
+                                 <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                                    Zone ${a}
+                                 </p>
+                              </div>
+                              <button id="ambdropdownButton${a}" data-dropdown-toggle="dropdown" class="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5" type="button">
+                                <span class="sr-only">Open dropdown</span>
+                                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                                    <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
+                                </svg>
+                            </button>
+                            <!-- Dropdown menu -->
+                            <div id="ambdropdown${a}" class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                <ul class="py-2" aria-labelledby="dropdownButton">
+                                  <li class=" mx-4 grid grid-cols-3 gap-2 grid-row-2">
+                                    <span class="text-black col-span-3">Priority Management</span>
+    
+                                    <button type="button" onclick="togglePriority(2,${a},1)" class="next_sibling text-red-700 border border-red-700 [&:has(input:checked)]:bg-red-700 [&:has(input:checked)]:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-red-500 dark:text-red-500 dark:focus:ring-red-800">
+                                      <input type="checkbox" class="hidden peer" id="alowCheck${a}"/>
+                                      <img src="./static/decrease-prio.png"/>
+                                      <span class="sr-only">Lowest Priority</span>
+                                    </button>
+    
+                                    <button type="button" onclick="togglePriority(2,${a},2)" class="next_sibling text-gray-700 border border-gray-700 [&:has(input:checked)]:text-white [&:has(input:checked)]:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-gray-500 dark:text-gray-500 dark:focus:ring-gray-800">
+                                      <input type="checkbox" class="hidden peer" id="aneutralCheck${a}" checked/>
+                                      <img src="./static/neutral-prio.png"/>
+                                      <span class="sr-only">Neutral Priority</span>
+                                    </button>
+    
+                                    <button type="button" onclick="togglePriority(2,${a},3)" class="next_sibling text-green-700 border border-green-700 [&:has(input:checked)]:bg-green-700 [&:has(input:checked)]:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-green-500 dark:text-green-500 dark:focus:ring-green-800">
+                                      <input type="checkbox" class="hidden peer" id="ahighCheck${a}"/>
+                                      <img src="./static/increase-prio.png"/>
+                                      <span class="sr-only">Highest Priority</span>
+                                    </button>
+                                    <a href="#" class="row-span-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Edit</a>
+                                  </li>
+                                  <li>
+                                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Export Data</a>
+                                  </li>
+                                  <li>
+                                      <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
+                                  </li>`
+            }
+
+            for(var a1 of data.ambulance_zones) {
+              new Dropdown(document.getElementById(`ambdropdown${a1}`), document.getElementById(`ambdropdownButton${a1}`))
+            }
+
+            document.getElementById("firList").innerHTML = ""
+            for(var f of data.firetruck_zones) {
+              document.getElementById("fi-time").innerText = `${update.getHours()}:${update.getMinutes()} ${update.getHours() >= 12 ? 'PM' : 'AM'}`
+              document.getElementById("firList").innerHTML += `<li class="pb-3 sm:pb-4">
+                           <div class="flex items-center space-x-4 rtl:space-x-reverse">
+                              <div class="rounded bg-[${getRandomVibrantColor(f)}] flex-shrink-0">
+                                 <div class="m-2">#${f}</div>
+                              </div>
+                              <div class="flex-1 min-w-0">
+                                 <p class="text-sm font-medium text-gray-900 truncate dark:text-white">
+                                    Ambulance
+                                 </p>
+                                 <p class="text-sm text-gray-500 truncate dark:text-gray-400">
+                                    Zone ${f}
+                                 </p>
+                              </div>
+                              <button id="firedropdownButton${f}" data-dropdown-toggle="dropdown" class="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5" type="button">
+                                <span class="sr-only">Open dropdown</span>
+                                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                                    <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"/>
+                                </svg>
+                            </button>
+                            <!-- Dropdown menu -->
+                            <div id="firedropdown${f}" class="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
+                                <ul class="py-2" aria-labelledby="dropdownButton">
+                                  <li class=" mx-4 grid grid-cols-3 gap-2 grid-row-2">
+                                    <span class="text-black col-span-3">Priority Management</span>
+    
+                                    <button type="button" onclick="togglePriority(3,${f},1)" class="next_sibling text-red-700 border border-red-700 [&:has(input:checked)]:bg-red-700 [&:has(input:checked)]:text-white focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-red-500 dark:text-red-500 dark:focus:ring-red-800">
+                                      <input type="checkbox" class="hidden peer" id="flowCheck${f}"/>
+                                      <img src="./static/decrease-prio.png"/>
+                                      <span class="sr-only">Lowest Priority</span>
+                                    </button>
+    
+                                    <button type="button" onclick="togglePriority(3,${f},2)" class="next_sibling text-gray-700 border border-gray-700 [&:has(input:checked)]:text-white [&:has(input:checked)]:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-gray-500 dark:text-gray-500 dark:focus:ring-gray-800">
+                                      <input type="checkbox" class="hidden peer" id="fneutralCheck${f}" checked/>
+                                      <img src="./static/neutral-prio.png"/>
+                                      <span class="sr-only">Neutral Priority</span>
+                                    </button>
+    
+                                    <button type="button" onclick="togglePriority(3,${f},3)" class="next_sibling text-green-700 border border-green-700 [&:has(input:checked)]:bg-green-700 [&:has(input:checked)]:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:border-green-500 dark:text-green-500 dark:focus:ring-green-800">
+                                      <input type="checkbox" class="hidden peer" id="fhighCheck${f}"/>
+                                      <img src="./static/increase-prio.png"/>
+                                      <span class="sr-only">Highest Priority</span>
+                                    </button>
+                                    <a href="#" class="row-span-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Edit</a>
+                                  </li>
+                                  <li>
+                                      <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Export Data</a>
+                                  </li>
+                                  <li>
+                                      <a href="#" class="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
+                                  </li>`
+            }
+
+            for(var f1 of data.firetruck_zones) {
+              new Dropdown(document.getElementById(`firedropdown${f1}`), document.getElementById(`firedropdownButton${f1}`))
+            }
+            
           });
 
           socket.on("disconnect", () => {
@@ -336,4 +647,5 @@
             socket.emit("request_access/admin", {username: username, password: password})
           }
         </script>
+        <script src="https://unpkg.com/flowbite@1.5.1/dist/flowbite.js"></script>
     </body>
